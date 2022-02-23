@@ -1,0 +1,40 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LinkDB {
+
+	public static void main(String[] args) {
+		
+		List<String> list = connect();
+	}
+	
+	//连接数据库执行语句
+	private static List<String> connect() {
+		List<String> arr = new ArrayList<String>();
+		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			String url = "jdbc:sqlserver://ip:port;database=数据库名";
+			String user = "用户名";
+			String password = "密码";
+			Connection con = DriverManager.getConnection(url, user, password);
+			
+			Statement statement = con.createStatement();
+			ResultSet re = statement.executeQuery("SELECT DISTINCT name FROM table");//执行查询语句，接收结果集
+			while (re.next()) {
+				arr.add(re.getString("name"));
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return arr;
+	}
+
+}
